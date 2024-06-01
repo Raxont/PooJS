@@ -5,5 +5,6 @@ export class Heroe extends Criatura{
         super();
         this.setVida=60;
         this.setAtaque=10;
+        this.setInventario=[];
     }
 }
