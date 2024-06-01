@@ -1,5 +1,6 @@
 import { Orco, Globin, Kobolt } from "./mostruo.js";
 import { Combate } from "./combate.js";
+import { Pocion } from "./pocion_vida.js";
 
 export class Juego{
     constructor(){
