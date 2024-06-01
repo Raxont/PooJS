@@ -27,12 +27,18 @@ export class Juego{
             case 'investigar':
                 this.investigar();
                 break;
+            case 'utilizarItem':
+                this.utilizarItem(objetivo);
+                break;
+            case 'reiniciar':
+                this.reiniciar();
+                break;
             default:
                 this.loguear("Acción no reconocida.");
         }
-        this.verificarJuegoTerminado();
+        this.verificarJuego();
     }
-    verificarJuegoTerminado(){
+    verificarJuego(){
         if(this.heroe.getVida<=0){
             this.juegoTerminado=true;
             this.loguear("¡Has muerto!");
@@ -48,6 +54,9 @@ export class Juego{
         const mostruoAleatorio = mostruos[indiceAleatorio];
         this.mostruo= new mostruoAleatorio();
         this.loguear(`Un ${this.mostruo.constructor.name} ha aparecido!`);
+    }
+    utilizarItem(objetivo) {
+        this.heroe.utilizarItem(objetivo);
     }
 
     atacar(oponente) {
