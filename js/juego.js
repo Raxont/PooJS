@@ -57,4 +57,11 @@ export class Juego{
         }
         this.combate.atacar(this.mostruo, oponente);
     }
+
+    reiniciar(){
+        this.heroe.setVida = this.heroe.getVida;
+        this.mostruo = null;
+        this.juegoTerminado = false;
+        this.loguear("El juego ha sido reiniciado satisfactoriamente.");
+    }
 }
