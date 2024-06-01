@@ -39,23 +39,41 @@ export class Juego{
         }
         this.verificarJuego();
     }
+
     verificarJuego(){
         if(this.heroe.getVida<=0){
             this.juegoTerminado=true;
             this.loguear("¡Has muerto!");
         }
     }
-    investigar(){
+
+    investigar() {
+        const probabilidad = Math.random(); //Gener un numero aleatorio entre 0 y 1
+        if (probabilidad < 0.8) { //80% probable de encontrar un monstruo
+            this.encontrarMonstruo();
+        } else {//20% probable encontrar una pocion
+            this.encontrarPocion();
+        }
+    }
+
+    encontrarMonstruo() {
         if (this.mostruo && this.mostruo.getVida > 0) {
-            this.loguear("No puedes investigar mientras este vivo el mostruo.");
+            this.loguear("No puedes investigar mientras el monstruo actual tiene vida.");
             return;
         }
-        const mostruos=[Orco, Globin, Kobolt];
-        const indiceAleatorio = Math.floor(Math.random() * mostruos.length);
-        const mostruoAleatorio = mostruos[indiceAleatorio];
-        this.mostruo= new mostruoAleatorio();
-        this.loguear(`Un ${this.mostruo.constructor.name} ha aparecido!`);
+        const monstruos = [Orco, Globin, Kobolt];
+        const indiceAleatorio = Math.floor(Math.random() * monstruos.length);
+        const monstruoAleatorio = monstruos[indiceAleatorio];
+        this.mostruo = new monstruoAleatorio();
+        this.loguear(`¡Un ${this.mostruo.constructor.name} ha aparecido!`);
     }
+
+    encontrarPocion() {
+        const pocion = new Pocion("Pocion"); //Se crea la "Pocion"
+        this.heroe.inventario.push(pocion); // Agrega una pocion al inventario del heroe
+        this.loguear(`¡Has encontrado una ${pocion.nombre}!`);
+    }
+
     utilizarItem(objetivo) {
         this.heroe.utilizarItem(objetivo);
     }
