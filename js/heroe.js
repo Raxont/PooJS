@@ -1,26 +1,22 @@
 import {Criatura} from "./criatura.js"
-import {Item} from "./item.js"
 
 export class Heroe extends Criatura{
     constructor(){
         super();
         this.setVida=60;
         this.setAtaque=10;
-        this.inventario=[];//Se crea un inventario para el Heroe
+        this.descansado = true; // Comienza descansado
     }
-    utilizarItem(item){
-        if(this.inventario.incluedes(item)){ //Se asegura si existe ese item en el inventario
-            item.utilizar(this); //Se llama al metodo utilizar de items.js
-            this.eliminarItem(item); //Se llama al metodo eliminarItem de este mismo archivo
-        }else {
-            console.log("El héroe no tiene ese ítem en su inventario.");
+    descansar() {
+        if (!this.descansado) {
+            this.setVida += 20; // Aumenta la vida al descansar
+            this.descansado = true; // Esta descansado
+            console.log("El héroe ha descansado y ha recuperado 20 puntos de vida.");
+        } else {
+            console.log("El heroe ya esta descansado, no puede descansar nuevamente.");
         }
     }
-    eliminarItem(item) {
-        const index = this.inventario.indexOf(item); //Encuentra el index del item del inventario 
-        if (index !== -1) { //Si no existe envia -1 por lo que no entra al iff
-            this.inventario.splice(index, 1); //Toma el index del inventario y elimina la cantidad de items deseados
-            console.log(`${item.nombre} ha sido eliminado del inventario.`);
-        }
+    cansar() {
+        this.descansado = false; // El heroe se cansa cuando es atacado
     }
 }

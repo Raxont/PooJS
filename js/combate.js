@@ -1,13 +1,23 @@
+import { Orco, Globin, Kobolt } from "./mostruo.js";
+
 export class Combate {
-    static atacar(atacante, oponente) {
-        if (oponente.getVida > 0) {
-            oponente.setVida = -atacante.getAtaque;
-            console.log(`${atacante.nombre} ataca a ${oponente.nombre} y le hace ${atacante.getAtaque} puntos de daño.`);
-            if (oponente.getVida <= 0) {
-                console.log(`${oponente.nombre} ha sido derrotado.`);
+    comenzarCombate(heroe, monstruo) {
+        while (heroe.getVida > 0 && monstruo.getVida > 0) {
+            this.atacar(heroe, monstruo);
+            if (monstruo.getVida > 0) {
+                this.atacar(monstruo, heroe);
             }
-        } else {
-            console.log(`${oponente.nombre} ya está derrotado.`);
         }
+        if (heroe.getVida <= 0) {
+            console.log(`${heroe.nombre} ha sido derrotado.`);
+        } else {
+            console.log(`${monstruo.nombre} ha sido derrotado.`);
+        }
+    }
+
+    atacar(atacante, objetivo) {
+        const dano = atacante.getAtaque;
+        objetivo.setVida=-dano;
+        console.log(`${atacante.nombre} ataca a ${objetivo.nombre} y le hace ${dano} puntos de daño.`);
     }
 }

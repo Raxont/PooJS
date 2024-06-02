@@ -1,14 +1,15 @@
-import { Orco, Globin, Kobolt } from "./mostruo.js";
+import { Area } from "./area.js";
 import { Combate } from "./combate.js";
-import { Pocion } from "./pocion_vida.js";
+import { Heroe } from "./heroe.js";
 
 export class Juego{
     constructor(){
-        this.historial = [];
+        this.historial = []; // Se guarda el historial del juego
         this.heroe = new Heroe();
-        this.mostruo = null;
         this.combate = new Combate();
-        this.juegoTerminado = false;
+        this.juegoTerminado = false; // El juego aun no ha terminado
+        this.areas = [new Area(), new Area(), new Area()]; // Existen 3 areas en total
+        this.areaActual = null; // Empieza sin un area actual
     }
     
     loguear(mensaje){
@@ -25,11 +26,20 @@ export class Juego{
             case 'atacar':
                 this.atacar(objetivo);
                 break;
+            case 'moverse':
+                this.moverse();
+                break;
             case 'investigar':
                 this.investigar();
                 break;
+            case 'descansar':
+                this.descansar();
+                break;
             case 'utilizarItem':
                 this.utilizarItem(objetivo);
+                break;
+            case 'verInventario':
+                this.verInventario();
                 break;
             case 'reiniciar':
                 this.reiniciar();
@@ -48,48 +58,57 @@ export class Juego{
     }
 
     investigar() {
-        const probabilidad = Math.random(); //Gener un numero aleatorio entre 0 y 1
-        if (probabilidad < 0.8) { //80% probable de encontrar un monstruo
-            this.encontrarMonstruo();
-        } else {//20% probable encontrar una pocion
-            this.encontrarPocion();
-        }
-    }
-
-    encontrarMonstruo() {
-        if (this.mostruo && this.mostruo.getVida > 0) {
-            this.loguear("No puedes investigar mientras el monstruo actual tiene vida.");
+        if (!this.areaActual) {
+            this.loguear("No hay un área actual para investigar. ¡Muévete primero!");
             return;
         }
-        const monstruos = [Orco, Globin, Kobolt];
-        const indiceAleatorio = Math.floor(Math.random() * monstruos.length);
-        const monstruoAleatorio = monstruos[indiceAleatorio];
-        this.mostruo = new monstruoAleatorio();
-        this.loguear(`¡Un ${this.mostruo.constructor.name} ha aparecido!`);
+        const resultado = this.areaActual.investigar();
+        this.loguear(resultado.mensaje);
     }
 
-    encontrarPocion() {
-        const pocion = new Pocion("Pocion"); //Se crea la "Pocion"
-        this.heroe.inventario.push(pocion); // Agrega una pocion al inventario del heroe
-        this.loguear(`¡Has encontrado una ${pocion.nombre}!`);
+    verInventario() {
+        this.heroe.inventario.imprimirLista();
     }
 
-    utilizarItem(objetivo) {
-        this.heroe.utilizarItem(objetivo);
+    utilizarItem(item) {
+        this.heroe.inventario.utilizarItem(item, this.heroe);
     }
 
-    atacar(oponente) {
-        if (!this.mostruo || this.mostruo.getVida <= 0) {
-            this.loguear("No puede atacar sin un mostruo válido o si el mostruo actual no tiene vida.");
+    atacar() {
+        if (!this.areaActual.mostruo) {
+            this.loguear("No hay monstruo para atacar.");
             return;
         }
-        this.combate.atacar(this.mostruo, oponente);
+        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
+        console.log("Vida de",this.areaActual.mostruo.nombre,":",this.areaActual.mostruo.getVida);
+        this.combate.comenzarCombate(this.heroe, this.areaActual.mostruo);
+        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
+        console.log("Vida de",this.areaActual.mostruo.nombre,":",this.areaActual.mostruo.getVida);
+    }
+
+    moverse() {
+        const indiceAleatorio = Math.floor(Math.random() * this.areas.length); //Muy parecido al mostruo aleatorio solo que esto es para un area
+        this.areaActual = this.areas[indiceAleatorio]; //Elige el area a moverse dependiendo del indice aleatorio encontrado
+        this.loguear(`Te has movido a una nueva área.`);
+    }
+
+    descansar() {
+        if (!this.areaActual) { //Busca si hay un area para descansar
+            this.loguear("No hay un área actual para descansar.");
+            return;
+        }
+
+        if (!this.areaActual.puedeDescansar()) { //Llama al metodo para ver si puede descansar en esa area
+            this.loguear("No puedes descansar en esta área.");
+            return;
+        }
+        this.heroe.descansar();
     }
 
     reiniciar(){
-        this.heroe.setVida = this.heroe.getVida;
-        this.mostruo = null;
-        this.juegoTerminado = false;
+        this.heroe.setVida = this.heroe.getVida; // Se reinicia la vida del heroe
+        this.mostruo = null; // Se elimina al oponente
+        this.juegoTerminado = false; // Se reinicia la variable
         this.loguear("El juego ha sido reiniciado satisfactoriamente.");
     }
 }
