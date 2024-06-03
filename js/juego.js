@@ -8,7 +8,7 @@ export class Juego{
         this.heroe = new Heroe();
         this.combate = new Combate();
         this.juegoTerminado = false; // El juego aun no ha terminado
-        this.areas = [new Area(), new Area(), new Area()]; // Existen 3 areas en total
+        this.areas = [new Area(), new Area(), new Area(),new Area(), new Area(), new Area(),new Area(), new Area(), new Area()]; 
         this.areaActual = null; // Empieza sin un area actual
     }
     

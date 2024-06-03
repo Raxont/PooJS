@@ -1,4 +1,5 @@
 import { Orco, Globin, Kobolt } from "./mostruo.js";
+import {Heroe} from "./heroe.js"
 
 export class Combate {
     comenzarCombate(heroe, monstruo) {
@@ -19,5 +20,8 @@ export class Combate {
         const dano = atacante.getAtaque;
         objetivo.setVida=-dano;
         console.log(`${atacante.nombre} ataca a ${objetivo.nombre} y le hace ${dano} puntos de daño.`);
+        if (objetivo instanceof Heroe) { // Se verifica que el objetivo sea una instancia llamada Heroe
+            objetivo.cansar();
+        }
     }
 }
