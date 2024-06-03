@@ -8,26 +8,37 @@ export class Inventario {
     }
 
     utilizarItem(item,objetivo){
-        
+        let mensajes;
         if (this.items.includes(item)) { //Se asegura si existe ese item en el inventario
-            item.utilizar(objetivo);; //Se llama al metodo utilizar de items.js
-            this.removerItem(item); //Se llama al metodo eliminarItem de este mismo archivo
+            mensajes = item.utilizar(objetivo); //Se llama al metodo utilizar de items.js
+            mensajes = mensajes + this.removerItem(item); //Se llama al metodo eliminarItem de este mismo archivo
+            
         }else {
-            console.log("El item no esta en el inventario.");
+            mensajes="El item no esta en el inventario.";
         }
+        return mensajes;
     }
 
     removerItem(item) {
+        let mensajes = [];
         const index = this.items.indexOf(item); //Encuentra el index del item del inventario 
         if (index !== -1) { //Si no existe envia -1 por lo que no entra al iff
             this.items.splice(index, 1); //Toma el index del inventario y elimina la cantidad de items deseados
-            console.log(`${item.nombre} ha sido eliminado del inventario.`);
+            mensajes.push([` ${item.nombre} ha sido eliminado del inventario.`].join(" "));
         }
+        return mensajes;
     }
+
     imprimirLista() {
-        console.log("Inventario:"); 
+        let mensajes = [];
+        mensajes.push("Inventario:"); 
         this.items.forEach(item => { //Se muestra cada item del inventario disponible
-            console.log(item.nombre);
+            mensajes.push([item.nombre,":",this.items.length].join(" "));
         });
+        return mensajes;
+    }
+
+    encontrarItem(nombre) {
+        return this.items.find(item => item.nombre === nombre); // Encuentra un item por su nombre en el array
     }
 }

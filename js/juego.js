@@ -15,11 +15,11 @@ export class Juego{
     loguear(mensaje){
         this.historial.push(mensaje);
         console.log(mensaje);
-        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
     }
 
     ejecutar(accion, objetivo){
-        if(this.juegoTerminado){
+        this.verificarJuego();
+        if (this.juegoTerminado && accion !== 'reiniciar') {
             this.loguear("No puede realizar acciones estando muerto...");
             return;
         }
@@ -48,7 +48,6 @@ export class Juego{
             default:
                 this.loguear("Acción no reconocida.");
         }
-        this.verificarJuego();
     }
 
     verificarJuego(){
@@ -64,22 +63,30 @@ export class Juego{
             return;
         }
         const resultado = this.areaActual.investigar();
-        console.log(resultado)
         this.loguear(resultado.mensaje);
-       
-        if (resultado.resultado === "Item") {  // Agregar ítem al inventario si se encuentra uno
+
+        if (resultado.resultado === "Monstruo") {
+            this.loguear("Derribalo antes de moverse a la siguiente área.");
+            this.heroe.bloqueado = true; // Bloquea al heroe para que no se pueda mover
+        } else if (resultado.resultado === "Item") {  // Agregar item al inventario si se encuentra uno
             this.heroe.inventario.agregarItem(resultado.objeto);
         }
     }
 
     verInventario() {
-        console.log(this.heroe);
-        this.heroe.inventario.imprimirLista();
+        const mensajes = this.heroe.inventario.imprimirLista();
+        mensajes.forEach(mensaje => this.loguear(mensaje));
     }
 
-    utilizarItem(item) {
-        console.log(item,this.heroe)
-        this.heroe.inventario.utilizarItem(item, this.heroe);
+    utilizarItem(items) {
+        const item = this.heroe.inventario.encontrarItem(items);
+        if (item) {
+            const mensajes = this.heroe.inventario.utilizarItem(item, this.heroe);
+            this.loguear(mensajes);
+            this.loguear(["Vida de",this.heroe.nombre,":",this.heroe.getVida].join(" "));
+        } else {
+            this.loguear("El item no está en el inventario.");
+        }
     }
 
     atacar() {
@@ -87,12 +94,17 @@ export class Juego{
             this.loguear("No hay monstruo para atacar.");
             return;
         }
-        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
-        this.combate.comenzarCombate(this.heroe, this.areaActual.mostruo);
-        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
+        const mensajes = this.combate.comenzarCombate(this.heroe, this.areaActual.mostruo);
+        mensajes.forEach(mensaje => this.loguear(mensaje));
+        this.heroe.bloqueado = false;
+        this.loguear(["Vida de",this.heroe.nombre,":",this.heroe.getVida].join(" "));
     }
 
     moverse() {
+        if (this.heroe.bloqueado) {
+            this.loguear("No puedes moverte mientras hay un monstruo vivo en el área.");
+            return;
+        }
         const indiceAleatorio = Math.floor(Math.random() * this.areas.length); //Muy parecido al mostruo aleatorio solo que esto es para un area
         this.areaActual = this.areas[indiceAleatorio]; //Elige el area a moverse dependiendo del indice aleatorio encontrado
         this.loguear(`Te has movido a una nueva área.`);
@@ -108,14 +120,25 @@ export class Juego{
             this.loguear("No puedes descansar en esta área.");
             return;
         }
-        this.heroe.descansar();
+        const mensajes = this.heroe.descansar();
+        mensajes.forEach(mensaje => this.loguear(mensaje));
+        this.loguear(["Vida de",this.heroe.nombre,":",this.heroe.getVida].join(" "));
     }
-
+    
     reiniciar(){
         this.heroe.setVida = 160; // Se reinicia la vida del heroe
-        this.mostruo = null; // Se elimina al oponente
+        this.heroe.descansado = true; // Se reinicia el estado cansado
         this.juegoTerminado = false; // Se reinicia la variable
+        // Se reinician las areas a investigar
         this.areas = [new Area(), new Area(), new Area(),new Area(), new Area(), new Area(),new Area(), new Area(), new Area()];
+        this.heroe.reiniciarInventario(); // Se reinicia el inventario
         this.loguear("El juego ha sido reiniciado satisfactoriamente.");
+        // Codigo para mejorar como se muestra el historial al reiniciar el heroe
+        console.log("Historial antes del reinicio:")
+        const data = {};
+        this.historial.forEach((mensaje, index) => {
+            data[`Mensaje ${index+1}`] = mensaje;
+        });
+        console.table(data);
     }
 }

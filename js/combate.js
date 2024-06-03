@@ -1,8 +1,8 @@
-import { Orco, Globin, Kobolt } from "./mostruo.js";
 import {Heroe} from "./heroe.js"
 
 export class Combate {
     comenzarCombate(heroe, monstruo) {
+        let mensajes = [];
         while (heroe.getVida > 0 && monstruo.getVida > 0) {
             this.atacar(heroe, monstruo);
             if (monstruo.getVida > 0) {
@@ -10,10 +10,11 @@ export class Combate {
             }
         }
         if (heroe.getVida <= 0) {
-            console.log(`${heroe.nombre} ha sido derrotado.`);
+            mensajes.push([`${heroe.nombre} ha sido derrotado.`].join(" "));
         } else {
-            console.log(`${monstruo.nombre} ha sido derrotado.`);
+            mensajes.push([`${monstruo.nombre} ha sido derrotado.`].join(" "));
         }
+        return mensajes;
     }
 
     atacar(atacante, objetivo) {
