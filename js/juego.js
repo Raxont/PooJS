@@ -126,8 +126,9 @@ export class Juego{
     }
     
     reiniciar(){
-        this.heroe.setVida = 160; // Se reinicia la vida del heroe
+        this.heroe.setVidaBase = 160; // Se reinicia la vida del heroe
         this.heroe.descansado = true; // Se reinicia el estado cansado
+        this.heroe.bloqueado = false; // Se desbloquea el movimiento del heroe
         this.juegoTerminado = false; // Se reinicia la variable
         // Se reinician las areas a investigar
         this.areas = [new Area(), new Area(), new Area(),new Area(), new Area(), new Area(),new Area(), new Area(), new Area()];
