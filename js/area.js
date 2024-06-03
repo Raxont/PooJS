@@ -1,5 +1,6 @@
 import { Orco, Globin, Kobolt } from "./mostruo.js";
 import { Pocion } from "./pocion_vida.js";
+import { Inventario } from "./inventario.js";
 
 export class Area {
     constructor() {
@@ -17,7 +18,7 @@ export class Area {
         this.investigada = true; // Marca el area como investigada
         const probabilidad = Math.random(); // Genera un numero aleatorio entre 0 y 1
 
-        if (probabilidad <= 0.7 && probabilidad>0.3) {  // 70% de probabilidad de encontrar un monstruo
+        if (probabilidad <= 0 && probabilidad>=0) {  // 50% de probabilidad de encontrar un monstruo
             const mostruo = [Orco, Globin, Kobolt];//Guardamos las 3 clases de mostruos
             //Multiplicamos un numero aleatorio entre 0 y 1 tomando el 0 pero no el 1 por la longitud de la lista de mostruos y finalizamos
             // redondeando hacia abajo el entero mas cercano de nuestro resultado
@@ -30,15 +31,16 @@ export class Area {
                 objeto: mostruoAleatorio, 
                 mensaje: `¡Un ${mostruoAleatorio.constructor.name} ha aparecido!`
             };
-        } else if (probabilidad < 0.1) { // 10% de probabilidad de encontrar un ítem
+        } else if (probabilidad <= 1 && probabilidad >0) { // 10% de probabilidad de encontrar un ítem
             const pocion = new Pocion("Poción de Vida");
+            
             //Guarda el objeto pocion
             return { 
                 resultado: "Item", 
                 objeto: pocion, 
                 mensaje: `¡Has encontrado una ${pocion.nombre}!` 
             };
-        } else if(probabilidad <= 0.3 && probabilidad>0.1){ // 30% de probabilidad de no encontrar nada
+        } else{ // 30% de probabilidad de no encontrar nada
             return { 
                 resultado: "Nada", 
                 mensaje: "No has encontrado nada." 

@@ -19,7 +19,6 @@ export class Combate {
     atacar(atacante, objetivo) {
         const dano = atacante.getAtaque;
         objetivo.setVida=-dano;
-        console.log(`${atacante.nombre} ataca a ${objetivo.nombre} y le hace ${dano} puntos de daño.`);
         if (objetivo instanceof Heroe) { // Se verifica que el objetivo sea una instancia llamada Heroe
             objetivo.cansar();
         }

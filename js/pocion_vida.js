@@ -1,11 +1,11 @@
 import { Item } from "./item.js";
 
-export class Pocion extends Item {
+export class Pocion {
     constructor(nombre) {
-        super(nombre); 
+        this.nombre = nombre;
     }
-    utilizar(objetivo) {
-        objetivo.setVida += 80; // Aumentar la vida del objetivo en 80 puntos
-        console.log(`${this.nombre} ha sido utilizado en ${objetivo.nombre}.`);
+    utilizar(heroe) {
+        heroe.setVida =  80; // Aumenta la vida del héroe en 80 puntos
+        console.log(`${heroe.nombre} ha utilizado una ${this.nombre} y ha recuperado 80 puntos de vida.`);
     }
 }

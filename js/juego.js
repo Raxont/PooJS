@@ -15,6 +15,7 @@ export class Juego{
     loguear(mensaje){
         this.historial.push(mensaje);
         console.log(mensaje);
+        console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
     }
 
     ejecutar(accion, objetivo){
@@ -63,14 +64,21 @@ export class Juego{
             return;
         }
         const resultado = this.areaActual.investigar();
+        console.log(resultado)
         this.loguear(resultado.mensaje);
+       
+        if (resultado.resultado === "Item") {  // Agregar ítem al inventario si se encuentra uno
+            this.heroe.inventario.agregarItem(resultado.objeto);
+        }
     }
 
     verInventario() {
+        console.log(this.heroe);
         this.heroe.inventario.imprimirLista();
     }
 
     utilizarItem(item) {
+        console.log(item,this.heroe)
         this.heroe.inventario.utilizarItem(item, this.heroe);
     }
 
@@ -80,10 +88,8 @@ export class Juego{
             return;
         }
         console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
-        console.log("Vida de",this.areaActual.mostruo.nombre,":",this.areaActual.mostruo.getVida);
         this.combate.comenzarCombate(this.heroe, this.areaActual.mostruo);
         console.log("Vida de",this.heroe.nombre,":",this.heroe.getVida);
-        console.log("Vida de",this.areaActual.mostruo.nombre,":",this.areaActual.mostruo.getVida);
     }
 
     moverse() {
@@ -106,9 +112,10 @@ export class Juego{
     }
 
     reiniciar(){
-        this.heroe.setVida = this.heroe.getVida; // Se reinicia la vida del heroe
+        this.heroe.setVida = 160; // Se reinicia la vida del heroe
         this.mostruo = null; // Se elimina al oponente
         this.juegoTerminado = false; // Se reinicia la variable
+        this.areas = [new Area(), new Area(), new Area(),new Area(), new Area(), new Area(),new Area(), new Area(), new Area()];
         this.loguear("El juego ha sido reiniciado satisfactoriamente.");
     }
 }

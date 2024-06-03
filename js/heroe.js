@@ -1,4 +1,5 @@
 import {Criatura} from "./criatura.js"
+import { Inventario } from "./inventario.js";
 
 export class Heroe extends Criatura{
     constructor(){
@@ -6,10 +7,11 @@ export class Heroe extends Criatura{
         this.setVida=60;
         this.setAtaque=10;
         this.descansado = true; // Comienza descansado
+        this.inventario = new Inventario();;
     }
     descansar() {
         if (!this.descansado) {
-            this.setVida += 20; // Aumenta la vida al descansar
+            this.setVida = 20; // Aumenta la vida al descansar
             this.descansado = true; // Esta descansado
             console.log("El héroe ha descansado y ha recuperado 20 puntos de vida.");
         } else {

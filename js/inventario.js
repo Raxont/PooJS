@@ -8,6 +8,7 @@ export class Inventario {
     }
 
     utilizarItem(item,objetivo){
+        
         if (this.items.includes(item)) { //Se asegura si existe ese item en el inventario
             item.utilizar(objetivo);; //Se llama al metodo utilizar de items.js
             this.removerItem(item); //Se llama al metodo eliminarItem de este mismo archivo
