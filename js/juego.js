@@ -140,5 +140,6 @@ export class Juego{
             data[`Mensaje ${index+1}`] = mensaje;
         });
         console.table(data);
+        this.historial=[] // Se reinicia el historial del juego
     }
 }
